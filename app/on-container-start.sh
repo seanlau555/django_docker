@@ -6,7 +6,7 @@ python manage.py makemigrations
 python manage.py migrate
 
 # Copy all static files to specific directory for nginx
-python manage.py collectstatic
+# python manage.py collectstatic
 
 # Start gunicorn server at port 8000 and keep an eye for app code changes
 # If changes occur, kill worker and start a new one
