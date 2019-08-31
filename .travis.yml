@@ -1,0 +1,45 @@
+language: python
+python:
+  - "3.6"
+
+services:
+  - docker
+
+install: |-
+  ## install awscli for ecr upload
+  pip install awscli --upgrade
+  # - prepare the command to be run elsewhere before push to ecr
+  export ECR_LOGIN="aws ecr get-login --registry-ids ${AWS_REGISTRY_ID} --region ${AWS_REGION} --no-include-email"
+
+
+before_script: pip install docker-compose
+
+
+script: |-
+  docker-compose run app sh -c "python manage.py test"
+
+  set -e
+
+  tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
+  export IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:$tag_build_num"
+  export IMAGE_LATEST="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:latest"
+
+  # build the final image
+  docker build -t "${IMAGE}" -t "${IMAGE_LATEST}" .
+  
+deploy:
+# upload to ecr
+  - provider: script
+    script:  >-
+      $(AWS_ACCESS_KEY_ID=${ACCESSKEYID} AWS_SECRET_ACCESS_KEY=${SECRETACCESSKEY} ${ECR_LOGIN})
+      && docker push "${IMAGE}"
+      && docker push "${IMAGE_LATEST}"
+    skip_cleanup: true
+    on:
+      all_branches: true
+
+
+after_deploy:
+  - echo "done deploying"
+
+
