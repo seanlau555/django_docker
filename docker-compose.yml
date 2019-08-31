@@ -2,14 +2,18 @@ version: '3.7'
 
 services:
   web:
-    build: ./app
+    build: .
     command: sh on-container-start.sh
     volumes:
-      - ./app:/app
+      - .:/usr/src/app
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
+    networks:
+      - nginx_network
     # ports:
     #   - 8000:8000
-    expose:
-      - 8000
+    # expose:
+    #   - 8000
     # env_file: .env
     # environment:
       # CACHE_IMAGE: mjhea0/docker-ci-cache
@@ -18,14 +22,27 @@ services:
       SECRET_KEY: "g!@a2x+)1y$w_zo7q(vei!q90-tk_$si97%zfx%r^5_sw1o%sg"
 
   nginx:
-    build: ./nginx
+    image: nginx:1.15.12-alpine
+
+    networks:
+      - nginx_network
+    # build: ./nginx
     # depends_on:
     #   - web
     # command: nginx -g 'daemon off;'
     volumes:
-      - ./app/static:/usr/src/app/staticfiles
-      - ./app/mediafiles:/usr/src/app/mediafiles
+      - ./config/nginx:/etc/nginx/conf.d
+      - static_volume:/usr/src/app/static
+      - media_volume:/usr/src/app/media
     ports:
-      - "8000:8000"
+      - 8000:80
     depends_on:
       - web
+
+networks: 
+  nginx_network:
+    driver: bridge
+
+volumes:
+  static_volume:  # <-- declare the static volume
+  media_volume: 
