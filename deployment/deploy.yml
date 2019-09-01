@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: 622408344557.dkr.ecr.ap-southeast-1.amazonaws.com/sparksine-django:latest
+        ports:
+        - containerPort: 8000
+
+# apiVersion: v1
+# clusters:
+# - cluster:
+#     certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUN5RENDQWJDZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFWTVJNd0VRWURWUVFERXdwcmRXSmwKY201bGRHVnpNQjRYRFRFNU1Ea3dNVEF6TkRZeU5Wb1hEVEk1TURneU9UQXpORFl5TlZvd0ZURVRNQkVHQTFVRQpBeE1LYTNWaVpYSnVaWFJsY3pDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDQVFvQ2dnRUJBTVRnCitnMUpWVUd4dG9yZnBlVUJPbHJ3NXVjcFVhQUgxdDFyMXFEbndybnU4Mm5RYW4zd2ZYbWp4bjR4T05ieTMyRVUKc3Fua3VvUmNlb2U2dmpEQTdaVkRXWE9ja0ZEREZEVVZCY3ZkR2pON0hvNHdhakVCY29IdGdEeTFKQk9BZHE1eQpEd20wYnpNVXMxVmpOcThZc3hnS25tMTFXTEIwcC9iYUg4OFdTLzY1RzVXd3o3RlBoYXVucU5VcGtQSUU4Y0FCCjk5Q0RkNXV5YUtKNXF3a1pxbzcvNkE2ZmZUbUduMG40ZElOVC80K3RwM1NVazRVekJLVUg0K1pZWmdCT3U2ckUKU1JkWWpTNTJaM2RIZzRMcjIyRDVsOW9najZjdTNsa09nRG43dndWMHRtL052ak5qMEl6S1BucXVRUjFnU2RnQQpUWE1vaEladzc4VjZURHZaQ3JNQ0F3RUFBYU1qTUNFd0RnWURWUjBQQVFIL0JBUURBZ0trTUE4R0ExVWRFd0VCCi93UUZNQU1CQWY4d0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFIMzBIajVYRm9sMVpRM1BOd2MzMnJSWC9yMzgKbHU5U3hSM3ZLSVN4K3NUelpvaDM1L3liVVNGL0lMSnhiUzZiS01qSVFzcjZGTlNnZHFUWTBSbldESjczTUxYdQpZMmpURFlKZmpFZTFFK0NuZWVWZ0E3enlXQVZhMlVPUnZkTmJmd0pwOHBGNGgweSt0S080cncrNmtDT2xGZlFlCnN6ZHhIZGllSkRYeGQvRGJiOFNtdzlYTjJMUzZJbE1TVVhac0JQbHNoWGlxNU9CQjRVVFN4cDFYcytnbDUxQjcKb0Z1Y0ZEVitCUXAzbjE2SUFienFHWUlsVEZCZ2JwRlV1bDl5RmV1b2IxYnhDLzUrQktCRkFhcXFzeTlHMElQKwpZVnpRSkllUTV1cTdmUWxMMEdUazRPa3BMckJveW0yRFdlWElUVFgrZmFkaW94eUdpSVNENDBiNnZOYz0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQo=
+#     server: https://224E63217B251B8123A3962F71EB4C9A.yl4.ap-southeast-1.eks.amazonaws.com
+#   name: django_travis
+# contexts:
+# - context:
+#     cluster: prod-data-eks-cluster-usw2
+#     namespace: airflow
+#     user: aws-user-prod-data-eks-cluster-usw2
+#   name: prod-data-eks-cluster-usw2
+# current-context: prod-data-eks-cluster-usw2
+# kind: Config
+# preferences: {}
+# users:
+# - name: aws-user-prod-data-eks-cluster-usw2
+#   user:
+#     exec:
+#       apiVersion: client.authentication.k8s.io/v1alpha1
+#       args:
+#         - token
+#         - -i
+#         - prod-data-eks-cluster-usw2
+#       command: aws-iam-authenticator

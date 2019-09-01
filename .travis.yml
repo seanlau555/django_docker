@@ -17,7 +17,7 @@ before_script: pip install docker-compose
 
 script: |-
 
-  docker-compose run web sh -c "python manage.py test"
+  docker run web sh -c "python manage.py test"
 
   set -e
 

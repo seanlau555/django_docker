@@ -16,7 +16,9 @@ RUN mkdir -p /var/log/gunicorn
 RUN mkdir /usr/src/app
 WORKDIR /usr/src/app
 # WORKDIR /app
-ADD . /usr/src/app/
+COPY . /usr/src/app/
+
+EXPOSE 8000
 
 # # install psycopg2
 # RUN apk update \
@@ -31,6 +33,11 @@ RUN pip install --upgrade pip
 RUN pip install pipenv
 RUN pipenv install --system --deploy
 
+
+# copy entrypoint.sh
+COPY ./on-container-start.sh /usr/src/app/on-container-start.sh
+
+ENTRYPOINT ["/usr/src/app/on-container-start.sh"]
 
 
 # COPY ./on-container-start.sh //app/on-container-start.sh

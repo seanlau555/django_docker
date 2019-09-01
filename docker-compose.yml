@@ -3,11 +3,10 @@ version: '3.7'
 services:
   web:
     build: .
-    command: sh on-container-start.sh
     volumes:
       - .:/usr/src/app
-      - static_volume:/usr/src/app/static
-      - media_volume:/usr/src/app/media
+      - static_volume:/usr/src/app/myproject/static
+      - media_volume:/usr/src/app/myproject/media
     networks:
       - nginx_network
     # ports:
@@ -32,8 +31,8 @@ services:
     # command: nginx -g 'daemon off;'
     volumes:
       - ./config/nginx:/etc/nginx/conf.d
-      - static_volume:/usr/src/app/static
-      - media_volume:/usr/src/app/media
+      - static_volume:/usr/src/app/myproject/static
+      - media_volume:/usr/src/app/myproject/media
     ports:
       - 8000:80
     depends_on:
@@ -44,5 +43,5 @@ networks:
     driver: bridge
 
 volumes:
-  static_volume:  # <-- declare the static volume
+  static_volume:
   media_volume: 
