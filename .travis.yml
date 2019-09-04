@@ -24,9 +24,14 @@ script: |-
   tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
   export IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:$tag_build_num"
   export IMAGE_LATEST="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:latest"
+  
+  tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
+  export NGINX_IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:$tag_build_num"
+  export NGINX_IMAGE_LATEST="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:latest"
 
   # build the final image
-  docker-compose build -t "${IMAGE}" -t "${IMAGE_LATEST}" .
+  docker build -t "${IMAGE}" -t "${IMAGE_LATEST}" ./app
+  docker build -t "${NGINX_IMAGE}" -t "${NGINX_IMAGE_LATEST}" ./nginx
   
 deploy:
 # upload to ecr
@@ -35,6 +40,10 @@ deploy:
       $(AWS_ACCESS_KEY_ID=${ACCESSKEYID} AWS_SECRET_ACCESS_KEY=${SECRETACCESSKEY} ${ECR_LOGIN})
       && docker push "${IMAGE}"
       && docker push "${IMAGE_LATEST}"
+      
+      $(AWS_ACCESS_KEY_ID=${ACCESSKEYID} AWS_SECRET_ACCESS_KEY=${SECRETACCESSKEY} ${ECR_LOGIN})
+      && docker push "${NGINX_IMAGE}"
+      && docker push "${NGINX_IMAGE_LATEST}"
     skip_cleanup: true
     on:
       all_branches: true
