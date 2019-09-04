@@ -20,30 +20,22 @@ script: |-
   docker-compose run web sh -c "python manage.py test"
 
   set -e
-
   tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
   export IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:$tag_build_num"
-  export IMAGE_LATEST="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:latest"
-  
-  tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
-  export NGINX_IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:$tag_build_num"
-  export NGINX_IMAGE_LATEST="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:latest"
+  export IMAGE_NGINX="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:$tag_build_num"
 
   # build the final image
-  docker build -t "${IMAGE}" -t "${IMAGE_LATEST}" ./app
-  docker build -t "${NGINX_IMAGE}" -t "${NGINX_IMAGE_LATEST}" ./nginx
-  
+  docker-compose build
+  docker tag ${AWS_ECR_NAME}:latest ${IMAGE}
+  docker tag ${AWS_ECR_NAME_NGINX}:latest ${IMAGE_NGINX}
+
 deploy:
 # upload to ecr
   - provider: script
     script:  >-
       $(AWS_ACCESS_KEY_ID=${ACCESSKEYID} AWS_SECRET_ACCESS_KEY=${SECRETACCESSKEY} ${ECR_LOGIN})
-      && docker push "${IMAGE}"
-      && docker push "${IMAGE_LATEST}"
-      
-      $(AWS_ACCESS_KEY_ID=${ACCESSKEYID} AWS_SECRET_ACCESS_KEY=${SECRETACCESSKEY} ${ECR_LOGIN})
-      && docker push "${NGINX_IMAGE}"
-      && docker push "${NGINX_IMAGE_LATEST}"
+      && docker-compose push
+
     skip_cleanup: true
     on:
       all_branches: true

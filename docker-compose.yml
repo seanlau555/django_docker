@@ -4,6 +4,7 @@ services:
   web:
     build: ./app
     command: sh on-container-start.sh
+    image: 622408344557.dkr.ecr.ap-southeast-1.amazonaws.com/sparksine-django
     volumes:
       - ./app:/app
     # ports:
@@ -19,6 +20,7 @@ services:
 
   nginx:
     build: ./nginx
+    image: 622408344557.dkr.ecr.ap-southeast-1.amazonaws.com/sparksine-django-nginx
     # depends_on:
     #   - web
     # command: nginx -g 'daemon off;'
