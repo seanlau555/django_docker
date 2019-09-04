@@ -21,13 +21,13 @@ script: |-
 
   set -e
   tag_build_num="v${TRAVIS_BUILD_NUMBER}-build"
-  export IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}:$tag_build_num"
-  export IMAGE_NGINX="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}:$tag_build_num"
+  export IMAGE="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME}"
+  export IMAGE_NGINX="${AWS_REGISTRY_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/${AWS_ECR_NAME_NGINX}"
 
   # build the final image
   docker-compose build
-  docker tag ${AWS_ECR_NAME}:latest ${IMAGE}
-  docker tag ${AWS_ECR_NAME_NGINX}:latest ${IMAGE_NGINX}
+  docker tag ${IMAGE}:latest ${IMAGE}:$tag_build_num
+  docker tag ${IMAGE_NGINX}:latest ${IMAGE_NGINX}:$tag_build_num
 
 deploy:
 # upload to ecr
